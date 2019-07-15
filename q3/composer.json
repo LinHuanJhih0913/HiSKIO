@@ -1,0 +1,16 @@
+{
+  "name": "jett/q3",
+  "license": "",
+  "authors": [
+    {
+      "name": "Jett",
+      "email": "newjett0617@gmail.com"
+    }
+  ],
+  "autoload": {
+    "classmap": [
+      "src"
+    ]
+  },
+  "require": {}
+}
