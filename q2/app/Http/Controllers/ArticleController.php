@@ -22,12 +22,15 @@ class ArticleController extends Controller
             return $request->user()->articles()->save(new Article($request->validated()));
         } catch (\Exception $e) {
             Log::error('db error', ['msg' => $e->getMessage(), 'request' => (string)$request]);
-            return response()->json(['msg' => 'db error'], Response::HTTP_BAD_GATEWAY);
+            // db error 不應該回 502，回 500 比較恰當
+            return response()->json(['msg' => 'db error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     public function show(Article $article)
     {
+        // 使用 model binding 用法雖然簡單、快速，但是對維護上難以找到，也很難去自定義回傳錯誤訊息
+        // 會使用 throw exception 來實現
         return $article;
     }
 
@@ -38,7 +41,7 @@ class ArticleController extends Controller
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
             Log::error('db error', ['msg' => $e->getMessage(), 'request' => (string)$request]);
-            return response()->json(['msg' => 'db error'], Response::HTTP_BAD_GATEWAY);
+            return response()->json(['msg' => 'db error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -48,7 +51,7 @@ class ArticleController extends Controller
             $article->delete();
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
-            return response()->json(['msg' => 'db error'], Response::HTTP_BAD_GATEWAY);
+            return response()->json(['msg' => 'db error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
