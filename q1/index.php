@@ -51,9 +51,34 @@ class Solution
     {
         return $n <= 0 ? 'input error' : floor($n / 2 + 1);
     }
+
+    public function ans(int $n)
+    {
+        /**
+         * n = 1, (1), 1
+         * n = 2, (11, 2), 2
+         * n = 3, (111, 12, 21), 3
+         * n = 4, (1111, 112, 121, 211, 22), 5
+         * n = 5, (11111, 1112, 1121, 1211, 2111, 122, 212, 221), 8
+         * n = 6, 5 + 8, 13
+         */
+        /**
+         * f1 = 1
+         * f2 = 2
+         * fn = fn-1 + fn-2, n
+         */
+        $f = [0, 1, 2];
+
+        if ($n === 0 || $n === 1 || $n === 2) {
+            return $f[$n];
+        }
+
+        for ($i = 3; $i < $n; $i++) {
+            $f[$i] = $f[$i - 1] + $f[$i - 2];
+        }
+
+        return $f[$n - 1] + $f[$n - 2];
+    }
 }
 
-var_dump((new Solution())->howManyWays(10));
-var_dump((new Solution())->result(10));
-var_dump((new Solution())->howManyWays(11));
-var_dump((new Solution())->result(11));
+var_dump((new Solution())->ans(5));
